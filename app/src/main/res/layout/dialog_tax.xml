@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:elevation="5dp"
+    android:layoutDirection="rtl"
+    app:cardBackgroundColor="#F9F9F9"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="12dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/taxDate"
+            android:layout_width="267dp"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_date"
+            android:drawablePadding="4dp"
+            android:hint="Date"
+            android:paddingStart="4dp"
+            android:text="التاريخ"
+            android:textColor="@color/primary_text"
+            android:textColorHint="@color/primary_text"
+            app:layout_constraintBottom_toTopOf="@+id/btnCancel"
+            app:layout_constraintEnd_toEndOf="@+id/taxNote"
+            app:layout_constraintStart_toStartOf="@+id/taxNote"
+            app:layout_constraintTop_toBottomOf="@+id/taxNote" />
+
+        <Button
+            android:id="@+id/btnSave"
+
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="133dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/btn_shape"
+            android:text="حفظ"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline9"
+            app:layout_constraintTop_toBottomOf="@+id/taxDate" />
+
+        <Button
+            android:id="@+id/btnCancel"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="133dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/btn_shape"
+            android:text="اغلاق"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline9"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btnSave" />
+
+        <EditText
+            android:id="@+id/taxNote"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorAccent"
+            android:drawableStart="@drawable/receipt"
+            android:ems="10"
+            android:hint="ملاحظات"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toTopOf="@+id/taxDate"
+            app:layout_constraintEnd_toEndOf="@+id/taxPrice"
+            app:layout_constraintStart_toStartOf="@+id/taxPrice"
+            app:layout_constraintTop_toBottomOf="@+id/taxPrice" />
+
+        <EditText
+            android:id="@+id/taxPrice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="@color/colorAccent"
+            android:drawableStart="@drawable/money"
+
+            android:ems="10"
+            android:hint="الحساب"
+            android:inputType="number"
+            app:layout_constraintBottom_toTopOf="@+id/taxNote"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

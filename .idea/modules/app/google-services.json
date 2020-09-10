@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "509888545759",
+    "firebase_url": "https://engine-agency-clients.firebaseio.com",
+    "project_id": "engine-agency-clients",
+    "storage_bucket": "engine-agency-clients.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:509888545759:android:034b7199e1653b19a57a6a",
+        "android_client_info": {
+          "package_name": "com.elmohands.engine_agency_clients"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "509888545759-jq554ofqolaaf8ie4gdpv4v28t1jvpou.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.elmohands.engine_agency_clients",
+            "certificate_hash": "3c45acec5ecfcfff5aefaa2e9929cc3c564dfdfb"
+          }
+        },
+        {
+          "client_id": "509888545759-3v8aehjuks9i327jbeiq5edp0c0obhf5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNCm3yab68ywTvcRzPmVNsjs28lxDGGqE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "509888545759-3v8aehjuks9i327jbeiq5edp0c0obhf5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
