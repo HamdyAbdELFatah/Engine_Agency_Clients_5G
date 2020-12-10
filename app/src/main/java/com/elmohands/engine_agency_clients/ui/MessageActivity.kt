@@ -21,7 +21,6 @@ import java.util.ArrayList
 
 class MessageActivity : AppCompatActivity() {
     private val TAG = "MessageActivity"
-    private val GALLERY_CODE = 1
     private var storageReference: StorageReference? = null
     private val db = FirebaseFirestore.getInstance()
     private val collectionReference = db.collection("Users")

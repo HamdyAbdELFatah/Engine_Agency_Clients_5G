@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
@@ -22,9 +24,14 @@ import com.elmohands.engine_agency_clients.model.Clients
 import com.elmohands.engine_agency_clients.model.Constant
 import com.elmohands.engine_agency_clients.my_interface.CallBack
 import com.elmohands.engine_agency_clients.ui.UserHome
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.fragment_clients.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -36,6 +43,7 @@ class ClientsFragment : Fragment(),CallBack, Toolbar.OnMenuItemClickListener {
     private lateinit var viewClients: View
     private lateinit var myContext: Context
     private lateinit var textDate: TextView
+    private lateinit var insertImage: TextView
     private var firebaseAuth: FirebaseAuth? = null
     var currentUserId: String? = null
     lateinit var toolbar: Toolbar
@@ -49,6 +57,8 @@ class ClientsFragment : Fragment(),CallBack, Toolbar.OnMenuItemClickListener {
     private val collectionReference = db.collection("Users")
     private lateinit var collectionCategory : CollectionReference
     private lateinit var collectionClients :CollectionReference
+    private var storageReference: StorageReference? = null
+    var urlImage=""
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -57,6 +67,7 @@ class ClientsFragment : Fragment(),CallBack, Toolbar.OnMenuItemClickListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        storageReference= FirebaseStorage.getInstance().reference
         listClients = ArrayList()
         listSelectedClients = ArrayList()
         listCategory = ArrayList()
@@ -111,25 +122,30 @@ class ClientsFragment : Fragment(),CallBack, Toolbar.OnMenuItemClickListener {
                 updateLabel()
             }
         floatingActionButton.setOnClickListener {
-            val dialog = Dialog(context!!)
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog.setContentView(R.layout.dialog_clients)
-            val window = dialog.window
+            urlImage=""
+            val dialogClients= Dialog(context!!)
+            dialogClients.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialogClients.setContentView(R.layout.dialog_clients)
+            val window = dialogClients.window
             window!!.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
             window.setGravity(Gravity.CENTER)
             window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog.setCancelable(false)
-            textDate = dialog.findViewById<TextView>(R.id.taxDate)
-            val clientName = dialog.findViewById<EditText>(R.id.taxName)
-            val phoneNumber = dialog.findViewById<EditText>(R.id.phoneNumber)
-            val textNote = dialog.findViewById<EditText>(R.id.taxNote)
-            val btnCancel = dialog.findViewById<Button>(R.id.btnCancel)
-            val btnSave = dialog.findViewById<Button>(R.id.btnSave)
-            dialog.show()
-            btnCancel.setOnClickListener {dialog.cancel()}
+            dialogClients.setCancelable(false)
+            textDate = dialogClients.findViewById(R.id.taxDate)
+            insertImage = dialogClients.findViewById(R.id.insertImage)
+            val clientName = dialogClients.findViewById<EditText>(R.id.taxName)
+            val phoneNumber = dialogClients.findViewById<EditText>(R.id.phoneNumber)
+            val textNote = dialogClients.findViewById<EditText>(R.id.taxNote)
+            val btnCancel = dialogClients.findViewById<Button>(R.id.btnCancel)
+            val btnSave = dialogClients.findViewById<Button>(R.id.btnSave)
+            insertImage.setOnClickListener {
+                CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).start(context!!, this)
+            }
+            dialogClients.show()
+            btnCancel.setOnClickListener {dialogClients.cancel()}
             textDate.setOnClickListener {
                 DatePickerDialog(
                     context!!, date, myCalendar.get(Calendar.YEAR), myCalendar.get(
@@ -145,16 +161,44 @@ class ClientsFragment : Fragment(),CallBack, Toolbar.OnMenuItemClickListener {
                     clientName.text.toString(),
                     phoneNumber.text.toString(),
                     "0",
+                    urlImage,
                     textNote.text.toString(),
                     textDate.text.toString(), "new"
+
                 )
+                urlImage=""
                 //val map=HashMap<String, String>()
                 collectionClients.document(idDocument).set(client).addOnSuccessListener {
                     listClients.add(client)
                     adapterClients.setClients(listClients.reversed())
-                    dialog.cancel()
+                    dialogClients.cancel()
                     itemCount++
-                }.addOnFailureListener { dialog.cancel() }
+                }.addOnFailureListener { dialogClients.cancel() }
+            }
+
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode ==  CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == AppCompatActivity.RESULT_OK) {
+            if (data != null) {
+                val path = storageReference?.child("clients_images")
+                ?.child("engine_agency_clients_" + Timestamp.now().seconds)
+                val result = CropImage.getActivityResult(data)
+                val imageUri = result.uri
+                val dialog =  Dialog(activity!!)
+                dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                dialog.setContentView(R.layout.loading_bar)
+                dialog.show()
+                path?.putFile(imageUri!!)?.addOnSuccessListener {
+                    path.downloadUrl.addOnSuccessListener {
+                        urlImage=it.toString()
+                    }.addOnCompleteListener {
+                        dialog.cancel()
+                        insertImage.text="تم الاضافه بنجاح"
+                    }
+                }?.addOnFailureListener{dialog.cancel()}
             }
         }
     }

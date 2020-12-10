@@ -19,20 +19,37 @@
             android:id="@+id/taxDate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:layout_marginBottom="4dp"
             android:drawableStart="@drawable/ic_date"
             android:drawablePadding="4dp"
-            android:hint="Date"
             android:paddingStart="4dp"
             android:text="التاريخ"
             android:textColor="@color/primary_text"
             android:textColorHint="@color/primary_text"
-            app:layout_constraintBottom_toTopOf="@+id/btnSave"
+            app:layout_constraintBottom_toTopOf="@+id/insertImage"
             app:layout_constraintEnd_toEndOf="@+id/taxNote"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="@+id/taxNote"
             app:layout_constraintTop_toBottomOf="@+id/taxNote" />
+
+        <TextView
+            android:id="@+id/insertImage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:drawableStart="@drawable/ic_insert_image"
+            android:drawablePadding="4dp"
+            android:paddingStart="4dp"
+            android:text="ارفاق صورة"
+            android:textColor="@color/primary_text"
+            android:textColorHint="@color/primary_text"
+            app:layout_constraintBottom_toTopOf="@+id/btnSave"
+            app:layout_constraintEnd_toEndOf="@+id/taxDate"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/taxDate"
+            app:layout_constraintTop_toBottomOf="@+id/taxDate" />
 
         <Button
             android:id="@+id/btnCancel"
@@ -69,7 +86,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="@+id/guideline9"
-            app:layout_constraintTop_toBottomOf="@+id/taxDate" />
+            app:layout_constraintTop_toBottomOf="@+id/insertImage" />
 
         <EditText
             android:id="@+id/taxName"

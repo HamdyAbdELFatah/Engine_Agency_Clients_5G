@@ -1,13 +1,19 @@
 package com.elmohands.engine_agency_clients.adapter
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.CompoundButton
-import android.widget.TextView
+import android.app.Dialog
+import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.view.*
+import android.widget.*
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.elmohands.engine_agency_clients.R
 import com.elmohands.engine_agency_clients.model.Clients
 import com.elmohands.engine_agency_clients.model.Constant
@@ -15,7 +21,10 @@ import com.elmohands.engine_agency_clients.my_interface.CallBack
 
 class ClientsCategoryAdapter() : RecyclerView.Adapter<ClientsCategoryAdapter.Holder>() {
     private var clients: List<Clients>? = null
+    lateinit var mContext : Context
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
+        mContext=parent.context
         val itemView: View = LayoutInflater.from(parent.context)
             .inflate(R.layout.client_item, parent, false)
         return Holder(itemView)
@@ -27,6 +36,59 @@ class ClientsCategoryAdapter() : RecyclerView.Adapter<ClientsCategoryAdapter.Hol
         holder.clientNumber.text= client?.number
         holder.clientNote.text= client?.note
         holder.clientDate.text= client?.date
+        if( !client?.image.isNullOrEmpty()) {
+            holder.clientPhoto.text = "اضغط لعرض الصورة"
+        }else
+            holder.clientPhoto.text = "لا يوجد صورة"
+        holder.clientPhoto.setOnClickListener {
+            if( !client?.image.equals("")) {
+                val dialog= Dialog(mContext)
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                dialog.setContentView(R.layout.image_viewer_dialog)
+                val window = dialog.window
+                window!!.setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+                window.setGravity(Gravity.CENTER)
+                window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                dialog.setCancelable(true)
+                val imageViewer = dialog.findViewById<ImageView>(R.id.imageViewer)
+                val imageViewerProgress = dialog.findViewById<ProgressBar>(R.id.imageViewerProgress)
+                dialog.setOnShowListener {
+                    Glide.with(mContext).load(client?.image).listener(
+                        object : RequestListener<Drawable> {
+                            override fun onResourceReady(
+                                resource: Drawable?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                dataSource: DataSource?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                imageViewerProgress.visibility = View.GONE
+                                return false
+                            }
+
+                            override fun onLoadFailed(
+                                e: GlideException?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                imageViewerProgress.visibility = View.GONE
+                                Toast.makeText(mContext, "فشل التحميل", Toast.LENGTH_SHORT).show()
+                                return false
+                            }
+                        }
+                    ).optionalCenterCrop()
+                        .error(R.drawable.photo).into(imageViewer)
+                }
+                dialog.show()
+            }else{
+                Toast.makeText(mContext, "لا يوجد صورة", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     }
 
     override fun getItemCount(): Int {
@@ -45,5 +107,7 @@ class ClientsCategoryAdapter() : RecyclerView.Adapter<ClientsCategoryAdapter.Hol
         val clientNumber= itemView.findViewById<TextView>(R.id.clientNumber)!!
         val clientDate= itemView.findViewById<TextView>(R.id.taxDateItem)!!
         val clientNote= itemView.findViewById<TextView>(R.id.taxNoteItem)!!
+        val clientPhoto= itemView.findViewById<TextView>(R.id.clientPhoto)!!
+
     }
 }

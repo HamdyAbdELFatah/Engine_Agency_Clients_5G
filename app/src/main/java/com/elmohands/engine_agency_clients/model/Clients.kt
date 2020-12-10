@@ -5,11 +5,13 @@ data class Clients(
     val name:String,
     val number:String,
     val price:String,
+    val image:String,
     val note:String,
     val date:String,
     val category:String){
 
     var checked=false
 
-    constructor() : this(0,"","","","","","","")
+    constructor() : this(0,"","","","","","","","")
+
 }

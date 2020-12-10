@@ -107,6 +107,7 @@ class PaidFragments : Fragment() {
                     clientName.text.toString(),
                     phoneNumber.text.toString(),
                     taxPrice.text.toString(),
+                    "",
                     textNote.text.toString(),
                     textDate.text.toString(), "new"
                 )
